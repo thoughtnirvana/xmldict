@@ -3,4 +3,4 @@
 *.exe
 *.out
 dist
-xmldict-*
+xmldict.egg*
