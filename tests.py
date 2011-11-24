@@ -61,12 +61,12 @@ class TestXmlutils(unittest.TestCase):
         assert expected == xml_to_dict(test)
 
     def test_dict_to_xml(self):
-        dict_xml = {'transaction': {'amount': '100.00','currency_code': 'USD'}}
+        dict_xml = {'transaction': {'amount': '100.00', 'currency_code': 'USD'}}
         expected = '<transaction><amount>100.00</amount><currency_code>USD</currency_code></transaction>'
         assert expected == dict_to_xml(dict_xml)
 
-        dict_xml = {'xml': {'foo': 'bar','baz': ['baz1', 'baz2']}}
-        expected = '<xml><foo>bar</foo><baz>baz1</baz><baz>baz2</baz></xml>'
+        dict_xml = {'xml': {'foo': 'bar','baz': ['baz1', 'baz2'], 'flag': True}}
+        expected = '<xml><flag>true</flag><foo>bar</foo><baz>baz1</baz><baz>baz2</baz></xml>'
         assert expected == dict_to_xml(dict_xml)
 
 if __name__ == '__main__':
