@@ -34,6 +34,8 @@ def _to_xml(el):
     val = None
     if isinstance(el, dict):
         val = _dict_to_xml(el)
+    elif isinstance(el, bool):
+        val = str(el).lower()
     else:
         val = el
     return val
