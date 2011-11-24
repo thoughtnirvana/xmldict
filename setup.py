@@ -45,7 +45,7 @@ Convert xml to python dictionaries.
 
 from setuptools import setup
 setup(name='xmldict',
-      version='0.2',
+      version='0.3',
       description='Convert xml to python dictionaries.',
       long_description=__doc__,
       author='Rahul Kumar',
