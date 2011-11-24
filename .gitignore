@@ -1,0 +1,6 @@
+*.pyc
+*.class
+*.exe
+*.out
+dist
+xmldict-*
