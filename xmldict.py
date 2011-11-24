@@ -21,27 +21,34 @@ def dict_to_xml(dict_xml):
     """
     Converts `dict_xml` which is a python dict to corresponding xml.
     """
-    return _xml_from_dict(dict_xml)
+    return _to_xml(dict_xml)
 
 # Functions below this line are implementation details.
 # Unless you are changing code, don't bother reading.
 # The functions above constitute the user interface.
 
-def _to_xml(tag, content):
-    if isinstance(content, dict):
-        val = '<%(tag)s>%(content)s</%(tag)s>' % dict(tag=tag,
-                                                      content=_xml_from_dict(content))
+def _to_xml(el):
+    """
+    Converts `el` to its xml representation.
+    """
+    val = None
+    if isinstance(el, dict):
+        val = _dict_to_xml(el)
     else:
-        val = '<%(tag)s>%(content)s</%(tag)s>' % dict(tag=tag, content=content)
+        val = el
     return val
 
-def _xml_from_dict(dict_xml):
+def _dict_to_xml(els):
     """
-    Converts `dict_xml` which is a python dict to corresponding xml.
+    Converts `els` which is a python dict to corresponding xml.
     """
     tags = []
-    for tag, content in dict_xml.iteritems():
-        tags.append(_to_xml(tag, content))
+    for tag, content in els.iteritems():
+        if isinstance(content, list):
+            for el in content:
+                tags.append('<%s>%s</%s>' % (tag, _to_xml(el), tag))
+        else:
+            tags.append('<%s>%s</%s>' % (tag, _to_xml(content), tag))
     return ''.join(tags)
 
 def _is_xml_el_dict(el):
@@ -73,6 +80,7 @@ def _str_to_boolean(bool_str):
     if bool_str.lower() != 'false' and bool(bool_str):
         return True
     return False
+
 
 def _from_xml(el):
     """
