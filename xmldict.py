@@ -15,7 +15,7 @@ def xml_to_dict(root_or_str):
     if isinstance(root, str):
         import xml.etree.cElementTree as ElementTree
         root = ElementTree.XML(root_or_str)
-    return {root.tag: _from_xml(root)}
+    return _from_xml(root)
 
 def dict_to_xml(dict_xml):
     """
@@ -81,7 +81,6 @@ def _str_to_boolean(bool_str):
         return True
     return False
 
-
 def _from_xml(el):
     """
     Extracts value of xml element element `el`.
@@ -139,4 +138,4 @@ def _dict_from_xml(els):
     res = {}
     for el in els:
         res[el.tag] = _from_xml(el)
-    return res
+    return {els.tag: res}
