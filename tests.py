@@ -69,5 +69,12 @@ class TestXmlutils(unittest.TestCase):
         expected = '<xml><flag>true</flag><foo>bar</foo><baz>baz1</baz><baz>baz2</baz></xml>'
         self.assertEqual(expected, dict_to_xml(dict_xml))
 
+        dict_xml = {'xml': 
+            {'foo': 'bar', 'baz': [{'baz1': 'baz2'}, {'baz1':'baz2', '@baz':
+                'baz'}], '@qux': 'qux'}
+        }
+        expected = '<xml qux="qux"><foo>bar</foo><baz><baz1>baz2</baz1></baz><baz baz="baz"><baz1>baz2</baz1></baz></xml>'
+        self.assertEqual(expected, dict_to_xml(dict_xml))
+
 if __name__ == '__main__':
     unittest.main()
