@@ -40,15 +40,30 @@ def _to_xml(el):
         val = el
     return val
 
+def _extract_attrs(els):
+    attrs = ' '.join([
+        '%s="%s"' % (key[1:], value) for (
+            key, value) in els.items() if key.startswith('@')
+    ])
+
+    return attrs
+
 def _dict_to_xml(els):
     """
     Converts `els` which is a python dict to corresponding xml.
     """
     tags = []
     for tag, content in els.iteritems():
+        if tag.startswith('@'):
+            continue
+
         if isinstance(content, list):
             for el in content:
-                tags.append('<%s>%s</%s>' % (tag, _to_xml(el), tag))
+                attrs = _extract_attrs(el)
+                tags.append('<%s %s>%s</%s>' % (tag, attrs, _to_xml(el), tag))
+        elif isinstance(content, dict):
+            attrs = _extract_attrs(content)
+            tags.append('<%s %s>%s</%s>' % (tag, attrs, _to_xml(content), tag))
         else:
             tags.append('<%s>%s</%s>' % (tag, _to_xml(content), tag))
     return ''.join(tags)
