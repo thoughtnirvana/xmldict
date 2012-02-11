@@ -41,8 +41,11 @@ def _to_xml(el):
     return val
 
 def _extract_attrs(els):
-    attrs = ' '.join([
-        '%s="%s"' % (key[1:], value) for (
+    if not isinstance(els, dict):
+        return ''
+
+    attrs = ''.join([
+        ' %s="%s"' % (key[1:], value) for (
             key, value) in els.items() if key.startswith('@')
     ])
 
@@ -60,10 +63,10 @@ def _dict_to_xml(els):
         if isinstance(content, list):
             for el in content:
                 attrs = _extract_attrs(el)
-                tags.append('<%s %s>%s</%s>' % (tag, attrs, _to_xml(el), tag))
+                tags.append('<%s%s>%s</%s>' % (tag, attrs, _to_xml(el), tag))
         elif isinstance(content, dict):
             attrs = _extract_attrs(content)
-            tags.append('<%s %s>%s</%s>' % (tag, attrs, _to_xml(content), tag))
+            tags.append('<%s%s>%s</%s>' % (tag, attrs, _to_xml(content), tag))
         else:
             tags.append('<%s>%s</%s>' % (tag, _to_xml(content), tag))
     return ''.join(tags)
