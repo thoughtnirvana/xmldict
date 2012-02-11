@@ -59,6 +59,7 @@ def _dict_to_xml(els):
     for tag, content in els.iteritems():
         if tag.startswith('@'):
             continue
+        if tag == '#text': continue
 
         if isinstance(content, list):
             for el in content:
@@ -66,7 +67,10 @@ def _dict_to_xml(els):
                 tags.append('<%s%s>%s</%s>' % (tag, attrs, _to_xml(el), tag))
         elif isinstance(content, dict):
             attrs = _extract_attrs(content)
-            tags.append('<%s%s>%s</%s>' % (tag, attrs, _to_xml(content), tag))
+            text = ''
+            if content.has_key('#text'):
+                text = content['#text']
+            tags.append('<%s%s>%s%s</%s>' % (tag, attrs, _to_xml(content), text, tag))
         else:
             tags.append('<%s>%s</%s>' % (tag, _to_xml(content), tag))
     return ''.join(tags)
