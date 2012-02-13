@@ -6,7 +6,7 @@
 """
 import datetime
 
-def xml_to_dict(root_or_str):
+def xml_to_dict(root_or_str, strict=False):
     """
     Converts `root_or_str` which can be parsed xml or a xml string to dict.
 
@@ -15,7 +15,7 @@ def xml_to_dict(root_or_str):
     if isinstance(root, str):
         import xml.etree.cElementTree as ElementTree
         root = ElementTree.XML(root_or_str)
-    return {root.tag: _from_xml(root)}
+    return {root.tag: _from_xml(root, strict)}
 
 def dict_to_xml(dict_xml):
     """
@@ -40,15 +40,37 @@ def _to_xml(el):
         val = el
     return val
 
+def _extract_attrs(els):
+    if not isinstance(els, dict):
+        return ''
+
+    attrs = ''.join([
+        ' %s="%s"' % (key[1:], value) for (
+            key, value) in els.items() if key.startswith('@')
+    ])
+
+    return attrs
+
 def _dict_to_xml(els):
     """
     Converts `els` which is a python dict to corresponding xml.
     """
     tags = []
     for tag, content in els.iteritems():
+        if tag.startswith('@'):
+            continue
+        if tag == '#text': continue
+
         if isinstance(content, list):
             for el in content:
-                tags.append('<%s>%s</%s>' % (tag, _to_xml(el), tag))
+                attrs = _extract_attrs(el)
+                tags.append('<%s%s>%s</%s>' % (tag, attrs, _to_xml(el), tag))
+        elif isinstance(content, dict):
+            attrs = _extract_attrs(content)
+            text = ''
+            if content.has_key('#text'):
+                text = content['#text']
+            tags.append('<%s%s>%s%s</%s>' % (tag, attrs, _to_xml(content), text, tag))
         else:
             tags.append('<%s>%s</%s>' % (tag, _to_xml(content), tag))
     return ''.join(tags)
@@ -83,7 +105,7 @@ def _str_to_boolean(bool_str):
         return True
     return False
 
-def _from_xml(el):
+def _from_xml(el, strict=False):
     """
     Extracts value of xml element element `el`.
     """
@@ -91,18 +113,28 @@ def _from_xml(el):
     # Parent node.
     if el:
         if _is_xml_el_dict(el):
-            val = _dict_from_xml(el)
+            val = _dict_from_xml(el, strict)
         elif _is_xml_el_list(el):
-            val = _list_from_xml(el)
+            val = _list_from_xml(el, strict)
     # Simple node.
     else:
         attribs = el.items()
-        # An element with no subelements but text.
-        if el.text:
-            val = _val_and_maybe_convert(el)
         # An element with attributes.
+        if attribs and strict:
+            val = dict(attribs)
+            if strict:
+                val = dict([('@%s' % k,v) for k,v in val.items()])
+                if el.text:
+                    converted = _val_and_maybe_convert(el)
+                    val['#text'] = el.text
+                    if converted != el.text:
+                        val['#value'] = converted
+        elif el.text:
+            # An element with no subelements but text.
+            val = _val_and_maybe_convert(el)
         elif attribs:
             val = dict(attribs)
+
     return val
 
 def _val_and_maybe_convert(el):
@@ -122,22 +154,22 @@ _val_and_maybe_convert.convertors = {
     'integer': int
 }
 
-def _list_from_xml(els):
+def _list_from_xml(els, strict=False):
     """
     Converts xml elements list `el_list` to a python list.
     """
     res = []
     tag = els[0].tag
     for el in els:
-        res.append(_from_xml(el))
+        res.append(_from_xml(el, strict))
     return {tag: res}
 
-def _dict_from_xml(els):
+def _dict_from_xml(els, strict=False):
     """
     Converts xml doc with root `root` to a python dict.
     """
     # An element with subelements.
     res = {}
     for el in els:
-        res[el.tag] = _from_xml(el)
+        res[el.tag] = _from_xml(el, strict)
     return res
