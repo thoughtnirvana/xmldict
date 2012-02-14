@@ -120,20 +120,17 @@ def _from_xml(el, strict=False):
         attribs = el.items()
         # An element with attributes.
         if attribs and strict:
-            val = dict(attribs)
-            if strict:
-                val = dict([('@%s' % k,v) for k,v in val.items()])
-                if el.text:
-                    converted = _val_and_maybe_convert(el)
-                    val['#text'] = el.text
-                    if converted != el.text:
-                        val['#value'] = converted
+            val = dict(('@%s' % k, v) for k, v in dict(attribs).iteritems())
+            if el.text:
+                converted = _val_and_maybe_convert(el)
+                val['#text'] = el.text
+                if converted != el.text:
+                    val['#value'] = converted
         elif el.text:
             # An element with no subelements but text.
             val = _val_and_maybe_convert(el)
         elif attribs:
             val = dict(attribs)
-
     return val
 
 def _val_and_maybe_convert(el):
