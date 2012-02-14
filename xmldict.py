@@ -6,7 +6,7 @@
 """
 import datetime
 
-def xml_to_dict(root_or_str, strict=False):
+def xml_to_dict(root_or_str, strict=True):
     """
     Converts `root_or_str` which can be parsed xml or a xml string to dict.
 
@@ -104,7 +104,7 @@ def _str_to_boolean(bool_str):
         return True
     return False
 
-def _from_xml(el, strict=False):
+def _from_xml(el, strict):
     """
     Extracts value of xml element element `el`.
     """
@@ -150,7 +150,7 @@ _val_and_maybe_convert.convertors = {
     'integer': int
 }
 
-def _list_from_xml(els, strict=False):
+def _list_from_xml(els, strict):
     """
     Converts xml elements list `el_list` to a python list.
     """
@@ -160,7 +160,7 @@ def _list_from_xml(els, strict=False):
         res.append(_from_xml(el, strict))
     return {tag: res}
 
-def _dict_from_xml(els, strict=False):
+def _dict_from_xml(els, strict):
     """
     Converts xml doc with root `root` to a python dict.
     """

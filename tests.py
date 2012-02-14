@@ -20,7 +20,7 @@ class TestXmlutils(unittest.TestCase):
                                        'first_name': 'Bob',
                                        'is_retained': True}}
 
-        self.assertEqual(expected, xml_to_dict(test))
+        self.assertEqual(expected, xml_to_dict(test, strict=False))
 
     def test_xml_to_dict_list(self):
         test = '''
@@ -31,7 +31,7 @@ class TestXmlutils(unittest.TestCase):
         '''
 
         expected = {'messages': {'message': ['message1', 'message2']}}
-        self.assertEqual(expected, xml_to_dict(test))
+        self.assertEqual(expected, xml_to_dict(test, strict=False))
 
     def test_xml_to_dict_strict(self):
         test = '''
@@ -63,7 +63,7 @@ class TestXmlutils(unittest.TestCase):
                                       '@key': 'failed_checksum'}]},
         }}
 
-        self.assertEqual(expected, xml_to_dict(test, True))
+        self.assertEqual(expected, xml_to_dict(test, strict=True))
 
     def test_dict_to_xml_simple(self):
         dict_xml = {'transaction': {'amount': '100.00', 'currency_code': 'USD'}}
