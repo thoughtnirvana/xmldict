@@ -38,6 +38,7 @@ def _to_xml(el):
         val = str(el).lower()
     else:
         val = el
+    if val is None: val = 'null'
     return val
 
 def _extract_attrs(els):

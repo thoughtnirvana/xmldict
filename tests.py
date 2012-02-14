@@ -70,6 +70,11 @@ class TestXmlutils(unittest.TestCase):
         expected = '<transaction><amount>100.00</amount><currency_code>USD</currency_code></transaction>'
         self.assertEqual(expected, dict_to_xml(dict_xml))
 
+    def test_dict_to_xml_empty(self):
+        dict_xml = {'messages': {'message': None}}
+        expected = '<messages><message>null</message></messages>'
+        self.assertEqual(expected, dict_to_xml(dict_xml))
+
     def test_dict_to_xml_lists(self):
         dict_xml = {'messages': {'message': ['message1', 'message2'], 'flag': True}}
         expected = '<messages><message>message1</message><message>message2</message><flag>true</flag></messages>'
