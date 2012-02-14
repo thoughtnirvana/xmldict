@@ -36,43 +36,39 @@ def _to_xml(el):
         val = _dict_to_xml(el)
     elif isinstance(el, bool):
         val = str(el).lower()
-    elif val is None:
-        val = ''
     else:
         val = el
     return val
 
 def _extract_attrs(els):
+    """
+    Extracts attributes from dictionary `els`. Attributes are keys which start
+    with '@'
+    """
     if not isinstance(els, dict):
         return ''
-
-    attrs = ''.join([
-        ' %s="%s"' % (key[1:], value) for (
-            key, value) in els.items() if key.startswith('@')
-    ])
-
-    return attrs
+    return ''.join(' %s="%s"' % (key[1:], value) for key, value in els.iteritems()
+                   if key.startswith('@'))
 
 def _dict_to_xml(els):
     """
     Converts `els` which is a python dict to corresponding xml.
     """
+    def process_content(tag, content):
+        attrs = _extract_attrs(content)
+        text = isinstance(content, dict) and content.get('#text', '') or ''
+        return '<%s%s>%s%s</%s>' % (tag, attrs, _to_xml(content), text, tag)
+
     tags = []
     for tag, content in els.iteritems():
-        if tag.startswith('@'):
+        # Text and attributes
+        if tag.startswith('@') or tag == '#text':
             continue
-        if tag == '#text': continue
-
-        if isinstance(content, list):
+        elif isinstance(content, list):
             for el in content:
-                attrs = _extract_attrs(el)
-                tags.append('<%s%s>%s</%s>' % (tag, attrs, _to_xml(el), tag))
+                tags.append(process_content(tag, el))
         elif isinstance(content, dict):
-            attrs = _extract_attrs(content)
-            text = ''
-            if content.has_key('#text'):
-                text = content['#text']
-            tags.append('<%s%s>%s%s</%s>' % (tag, attrs, _to_xml(content), text, tag))
+            tags.append(process_content(tag, content))
         else:
             tags.append('<%s>%s</%s>' % (tag, _to_xml(content), tag))
     return ''.join(tags)
