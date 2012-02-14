@@ -5,7 +5,7 @@ def upload():
     Uploads the package to pypi.
     """
     local('python setup.py sdist upload')
-    clean()
+    _clean()
 
 def _clean():
     """
