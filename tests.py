@@ -45,11 +45,12 @@ class TestXmlutils(unittest.TestCase):
         </payment_method>
         '''
 
-        expected = {'payment_method': {'created_at': {
-            '@type': 'datetime',
-            '#value': datetime.datetime(2011, 2, 12, 20, 20, 46),
-            '#text': '2011-02-12T20:20:46Z'
-        },
+        expected = {'payment_method': {
+            'created_at': {
+                '@type': 'datetime',
+                '#value': datetime.datetime(2011, 2, 12, 20, 20, 46),
+                '#text': '2011-02-12T20:20:46Z'
+            },
             'is_retained': {
                 '@type': 'boolean',
                 '#value': True,
