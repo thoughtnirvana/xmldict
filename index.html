@@ -1,0 +1,96 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Xmldict</title>
+  <meta name="description" content="Convert xml to dict and vice versa.">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Xmldict</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Convert xml to dict and vice versa.</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/thoughtnirvana/xmldict/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/thoughtnirvana/xmldict/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/thoughtnirvana/xmldict" class="code">fork Xmldict on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>xmldict</h1>
+
+<p>Convert xml to python dictionaries, and vice-versa.</p>
+
+<h2>Installation</h2>
+
+<pre><code>pip install xmldict
+</code></pre>
+
+<p>On most of the systems, you will need the <code>sudo</code> permissions if you are doing a system wide
+install.</p>
+
+<pre><code>sudo pip install xmldict
+</code></pre>
+
+<h2>Exmaple</h2>
+
+<pre><code># Converting xml to dictionary
+&gt;&gt;&gt; xmldict.xml_to_dict('''
+... &lt;root&gt;
+...   &lt;persons&gt;
+...     &lt;person&gt;
+...       &lt;name first="foo" last="bar" /&gt;
+...     &lt;/person&gt;
+...     &lt;person&gt;
+...       &lt;name first="baz" last="bar" /&gt;
+...     &lt;/person&gt;
+...   &lt;/persons&gt;
+... &lt;/root&gt;
+... ''')
+{'root': {'persons': {'person': [{'name': {'last': 'bar', 'first': 'foo'}}, {'name': {'last': 'bar', 'first': 'baz'}}]}}}
+
+
+# Converting dictionary to xml 
+&gt;&gt;&gt; xmldict.dict_to_xml({'root': {'persons': {'person': [{'name': {'last': 'bar', 'first': 'foo'}}, {'name': {'last': 'bar', 'first': 'baz'}}]}}})
+'&lt;root&gt;&lt;persons&gt;&lt;person&gt;&lt;name&gt;&lt;last&gt;bar&lt;/last&gt;&lt;first&gt;foo&lt;/first&gt;&lt;/name&gt;&lt;/person&gt;&lt;person&gt;&lt;name&gt;&lt;last&gt;bar&lt;/last&gt;&lt;first&gt;baz&lt;/first&gt;&lt;/name&gt;&lt;/person&gt;&lt;/persons&gt;&lt;/root&gt;'
+</code></pre>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/thoughtnirvana" class="avatar"><img src="https://secure.gravatar.com/avatar/b77e26a6dda4cf686bcb63df4c50d31e?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" width="48" height="48"/></a> <a href="https://github.com/thoughtnirvana">thoughtnirvana</a> maintains <a href="https://github.com/thoughtnirvana/xmldict">Xmldict</a></p>
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/thoughtnirvana/xmldict/tarball/master" class="tar">tar</a><a href="https://github.com/thoughtnirvana/xmldict/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
