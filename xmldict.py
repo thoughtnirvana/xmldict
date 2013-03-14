@@ -74,24 +74,6 @@ def _dict_to_xml(els):
             tags.append('<%s>%s</%s>' % (tag, _to_xml(content), tag))
     return ''.join(tags)
 
-def _is_xml_el_dict(el):
-    """
-    Returns true if `el` is supposed to be a dict.
-    This function makes sense only in the context of making dicts out of xml.
-    """
-    if len(el) == 1  or el[0].tag != el[1].tag:
-        return True
-    return False
-
-def _is_xml_el_list(el):
-    """
-    Returns true if `el` is supposed to be a list.
-    This function makes sense only in the context of making lists out of xml.
-    """
-    if len(el) > 1 and el[0].tag == el[1].tag:
-        return True
-    return False
-
 def _str_to_datetime(date_str):
     try:
         val = datetime.datetime.strptime(date_str,  "%Y-%m-%dT%H:%M:%SZ")
@@ -110,11 +92,19 @@ def _from_xml(el, strict):
     """
     val = None
     # Parent node.
-    if el:
-        if _is_xml_el_dict(el):
-            val = _dict_from_xml(el, strict)
-        elif _is_xml_el_list(el):
-            val = _list_from_xml(el, strict)
+    if len(el):
+        val = {}
+        for e in el:
+            tag = e.tag
+            v = _from_xml(e, strict)
+            if tag in val:
+                # Multiple elements share this tag, make them a list
+                if not isinstance(val[tag], list):
+                    val[tag] = [val[tag]]
+                val[tag].append(v)
+            else:
+                # First element with this tag
+                val[tag] = v
     # Simple node.
     else:
         attribs = el.items()
@@ -150,22 +140,3 @@ _val_and_maybe_convert.convertors = {
     'integer': int
 }
 
-def _list_from_xml(els, strict):
-    """
-    Converts xml elements list `el_list` to a python list.
-    """
-    res = []
-    tag = els[0].tag
-    for el in els:
-        res.append(_from_xml(el, strict))
-    return {tag: res}
-
-def _dict_from_xml(els, strict):
-    """
-    Converts xml doc with root `root` to a python dict.
-    """
-    # An element with subelements.
-    res = {}
-    for el in els:
-        res[el.tag] = _from_xml(el, strict)
-    return res
