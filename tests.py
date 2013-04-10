@@ -66,6 +66,14 @@ class TestXmlutils(unittest.TestCase):
 
         self.assertEqual(expected, xml_to_dict(test, strict=True))
 
+
+    def test_xml_to_dict_order(self):
+        order1 = '<a><c>2</c><c>3</c><b>1</b></a>'
+        order2 = '<a><b>1</b><c>2</c><c>3</c></a>'
+        expected ={'a': {'c': ['2', '3'], 'b': '1'}}
+        self.assertEqual(expected, xml_to_dict(order1))
+        self.assertEqual(expected, xml_to_dict(order2))
+
     def test_dict_to_xml_simple(self):
         dict_xml = {'transaction': {'amount': '100.00', 'currency_code': 'USD'}}
         expected = '<transaction><amount>100.00</amount><currency_code>USD</currency_code></transaction>'
