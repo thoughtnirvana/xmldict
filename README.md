@@ -14,7 +14,7 @@ install.
     sudo pip install xmldict
 
 
-Exmaple
+Example
 ---------------------
 
 
