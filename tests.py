@@ -66,6 +66,44 @@ class TestXmlutils(unittest.TestCase):
 
         self.assertEqual(expected, xml_to_dict(test, strict=True))
 
+    def test_xml_to_dict_and_reverse(self):
+
+        self.maxDiff = None
+
+        test = '''
+        <messages>
+        <message id="1">
+        a
+        b
+        ...
+        </message>
+        <message id="2">
+        c
+        d
+        ...
+        </message>
+        </messages>
+        '''
+
+        expected = {'messages':
+                     {'message':
+                        [
+                            {'@id': '1',
+                             '#value': 'a\n        b\n        ...',
+                             '#text': '\n        a\n        b\n        ...\n        ',
+                            },
+                            {'@id': '2',
+                             '#value': 'c\n        d\n        ...',
+                             '#text': '\n        c\n        d\n        ...\n        ',
+                            },
+                        ]
+                    }
+                  }
+
+        self.assertEqual(expected, xml_to_dict(test, strict=True))
+
+        # once converted to dict, go back to xml
+        self.assertEqual(test, dict_to_xml(expected))
 
     def test_xml_to_dict_order(self):
         order1 = '<a><c>2</c><c>3</c><b>1</b></a>'
