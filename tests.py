@@ -68,8 +68,6 @@ class TestXmlutils(unittest.TestCase):
 
     def test_xml_to_dict_and_reverse(self):
 
-        self.maxDiff = None
-
         test = '''<messages>
 <message id="1">
 a
@@ -100,15 +98,15 @@ d
 
         self.assertEqual(expected, xml_to_dict(test, strict=True))
 
-        # once converted to dict, go back to xml (ddo not care about extra blanks)
-        def _remove_spaces(content):
+        # once converted to dict, go back to xml (do not care about extra blanks)
+        def _remove_blanks(content):
 
             from lxml import etree
             parser = etree.XMLParser(remove_blank_text=True)
             elem = etree.XML(content, parser=parser)
             return etree.tostring(elem)
 
-        self.assertEqual(_remove_spaces(test), dict_to_xml(expected))
+        self.assertEqual(_remove_blanks(test), dict_to_xml(expected))
 
     def test_xml_to_dict_order(self):
         order1 = '<a><c>2</c><c>3</c><b>1</b></a>'
