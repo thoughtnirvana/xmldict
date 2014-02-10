@@ -61,7 +61,6 @@ def _dict_to_xml(els):
         return '<%s%s>%s%s</%s>' % (tag, attrs, _to_xml(content), text, tag)
 
     tags = []
-
     for tag, content in els.iteritems():
         # Text and attributes
         if tag.startswith('@') or tag == '#text' or tag == '#value':
