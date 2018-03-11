@@ -115,6 +115,20 @@ d
         self.assertEqual(expected, xml_to_dict(order1))
         self.assertEqual(expected, xml_to_dict(order2))
 
+    def test_xml_to_dict_namespace(self):
+        xml_str1 = """<root id="1" xmlns="somenamespace"><items><item>1</item><item>2</item></items></root>"""
+        xml_str2 = """<root id="1"><items><item>1</item><item>2</item></items></root>"""
+        expected1 = {'{somenamespace}root': {'{somenamespace}items': {'{somenamespace}item': ['1', '2']}}}
+        expected2 = {'root': {'items': {'item': ['1', '2']}}}
+        self.assertEqual(expected1, xml_to_dict(xml_str1, strict=False))
+        self.assertEqual(expected1, xml_to_dict(xml_str1))
+        self.assertEqual(expected2, xml_to_dict(xml_str1, False, True))
+        self.assertEqual(expected2, xml_to_dict(xml_str1, remove_namespace=True))
+        self.assertEqual(expected2, xml_to_dict(xml_str2, strict=False))
+        self.assertEqual(expected2, xml_to_dict(xml_str2))
+        self.assertEqual(expected2, xml_to_dict(xml_str2, False, True))
+        self.assertEqual(expected2, xml_to_dict(xml_str2, remove_namespace=True))
+
     def test_dict_to_xml_simple(self):
         dict_xml = {'transaction': {'amount': '100.00', 'currency_code': 'USD'}}
         expected = '<transaction><amount>100.00</amount><currency_code>USD</currency_code></transaction>'

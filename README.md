@@ -33,6 +33,9 @@ Example
     ... ''')
     {'root': {'persons': {'person': [{'name': {'last': 'bar', 'first': 'foo'}}, {'name': {'last': 'bar', 'first': 'baz'}}]}}}
 
+    # Removing namespace during convertion to dictionary is optional
+    >>> xmldict.xml_to_dict("""<root id="1" xmlns="somenamespace"><items><item>1</item><item>2</item></items></root>""", remove_namespace=True)
+    {'root': {'items': {'item': ['1', '2']}}}
 
     # Converting dictionary to xml 
     >>> xmldict.dict_to_xml({'root': {'persons': {'person': [{'name': {'last': 'bar', 'first': 'foo'}}, {'name': {'last': 'bar', 'first': 'baz'}}]}}})
