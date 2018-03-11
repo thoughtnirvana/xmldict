@@ -6,7 +6,7 @@
 """
 import datetime
 
-def xml_to_dict(root_or_str, strict=True):
+def xml_to_dict(root_or_str, strict=True, remove_namespace=False):
     """
     Converts `root_or_str` which can be parsed xml or a xml string to dict.
 
@@ -15,7 +15,10 @@ def xml_to_dict(root_or_str, strict=True):
     if isinstance(root, str):
         import xml.etree.cElementTree as ElementTree
         root = ElementTree.XML(root_or_str)
-    return {root.tag: _from_xml(root, strict)}
+        the_tag = root.tag
+        if remove_namespace:
+            the_tag = _remove_namespace(root.tag)
+    return {the_tag: _from_xml(root, strict, remove_namespace)}
 
 def dict_to_xml(dict_xml):
     """
@@ -86,7 +89,7 @@ def _str_to_boolean(bool_str):
         return True
     return False
 
-def _from_xml(el, strict):
+def _from_xml(el, strict, rem_ns):
     """
     Extracts value of xml element element `el`.
     """
@@ -96,7 +99,9 @@ def _from_xml(el, strict):
         val = {}
         for e in el:
             tag = e.tag
-            v = _from_xml(e, strict)
+            if rem_ns:
+                tag = _remove_namespace(tag)
+            v = _from_xml(e, strict, rem_ns)
             if tag in val:
                 # Multiple elements share this tag, make them a list
                 if not isinstance(val[tag], list):
@@ -140,3 +145,8 @@ _val_and_maybe_convert.convertors = {
     'integer': int
 }
 
+def _remove_namespace(tag):
+        if tag.find("{") >= 0 and tag.find("}") >= 0:
+            return tag[:tag.find("{")] + tag[(tag.find("}")+1):]
+        else:
+            return tag
