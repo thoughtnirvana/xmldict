@@ -15,7 +15,7 @@ install.
     sudo pip install xmldict
 
 
-Exmaple
+Example
 ---------------------
 ::
     # Converting xml to dictionary
